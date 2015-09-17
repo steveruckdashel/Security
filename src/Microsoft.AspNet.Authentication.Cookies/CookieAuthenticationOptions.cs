@@ -3,6 +3,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNet.DataProtection;
 using Microsoft.AspNet.Http;
 using Microsoft.Framework.Internal;
 using Microsoft.Framework.OptionsModel;
@@ -69,6 +70,11 @@ namespace Microsoft.AspNet.Authentication.Cookies
         /// and portions of your site are HTTP you may need to change this value.
         /// </summary>
         public CookieSecureOption CookieSecure { get; set; }
+
+        /// <summary>
+        /// If set this will be used by the CookieAuthenticationMiddleware for data protection.
+        /// </summary>
+        public IDataProtectionProvider DataProtectionProvider { get; set; }
 
         /// <summary>
         /// Controls how much time the cookie will remain valid from the point it is created. The expiration

@@ -172,8 +172,7 @@ namespace Microsoft.AspNet.Authentication.Twitter
             var model = await HandleAuthenticateOnceAsync();
             if (model == null)
             {
-                Logger.LogWarning("Invalid return state, unable to redirect.");
-                Response.StatusCode = 500;
+                await HandleErrorAsync(new ErrorContext(Context, "Invalid return state, unable to redirect."));
                 return true;
             }
 
@@ -191,7 +190,7 @@ namespace Microsoft.AspNet.Authentication.Twitter
                 await Context.Authentication.SignInAsync(context.SignInScheme, context.Principal, context.Properties);
             }
 
-            if (!context.IsRequestCompleted && context.RedirectUri != null)
+            if (!context.RequestCompleted && context.RedirectUri != null)
             {
                 if (context.Principal == null)
                 {
@@ -199,10 +198,10 @@ namespace Microsoft.AspNet.Authentication.Twitter
                     context.RedirectUri = QueryHelpers.AddQueryString(context.RedirectUri, "error", "access_denied");
                 }
                 Response.Redirect(context.RedirectUri);
-                context.RequestCompleted();
+                context.RequestCompleted = true;
             }
 
-            return context.IsRequestCompleted;
+            return context.RequestCompleted;
         }
 
         protected override Task HandleSignOutAsync(SignOutContext context)
